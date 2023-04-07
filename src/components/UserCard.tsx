@@ -18,6 +18,8 @@ interface UserCardProps {
 }
 
 const UserCard: FC<UserCardProps> = ({key, user}) => {
+  const isHaveRepositories =
+    Array.isArray(user?.repositories) && user?.repositories?.length > 0;
   return (
     <Accordion
       className="bg-gray-200 shadow-none rounded-none"
@@ -33,21 +35,25 @@ const UserCard: FC<UserCardProps> = ({key, user}) => {
           {user?.login}
         </span>
       </AccordionSummary>
-      <AccordionDetails className="bg-white">
-        <div className="flex flex-col space-y-3 mt-1">
-          {user?.repositories?.map(
-            (
-              repository: {
-                name: string;
-                description: string | null;
-                stargazers_count: number;
-              },
-              idx2: number
-            ) => (
-              <RepositoryCard repository={repository} key={idx2} />
-            )
-          )}
-        </div>
+      <AccordionDetails className={`${isHaveRepositories ? "bg-white" : ""}`}>
+        {isHaveRepositories ? (
+          <div className="flex flex-col space-y-3 mt-1">
+            {user?.repositories?.map(
+              (
+                repository: {
+                  name: string;
+                  description: string | null;
+                  stargazers_count: number;
+                },
+                idx2: number
+              ) => (
+                <RepositoryCard repository={repository} key={idx2} />
+              )
+            )}
+          </div>
+        ) : (
+          <span className="text-gray-500 font-semibold">No repositories</span>
+        )}
       </AccordionDetails>
     </Accordion>
   );

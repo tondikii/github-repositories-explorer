@@ -82,6 +82,7 @@ function App() {
       Promise.all(tempPromises).then((result) => {
         setItems(result);
         setSubmitted(true);
+        setLoading(false);
       });
     } catch (error) {
       console.error(error);
@@ -90,7 +91,6 @@ function App() {
         title: "Oops...",
         text: "Failed search user!",
       });
-    } finally {
       setLoading(false);
     }
   };
