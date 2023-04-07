@@ -2,6 +2,12 @@
 
 This is a project recruitment test at PT. Atask Teknologi Internasional using Create React APP
 
+**Repository Note: `ENV REACT_APP_GITHUB_TOKEN` has been hashed due to security reason, please change config axios Authorization at directory ./src/configs/api with your own `GITHUB_TOKEN`**
+
+# Tech Stacks
+
+This App Created with Create React APP using `tailwind` (https://tailwindcss.com/), `muimaterial` (https://mui.com/), `sweetalert2` (https://sweetalert2.github.io/), `react-spinners` (https://www.npmjs.com/package/react-spinners) for the css and component libraries, `Axios` (https://axios-http.com/) for API Request, `dotenv` to hide private data, `testing-library` and `jest` for unit testing.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
