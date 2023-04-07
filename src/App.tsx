@@ -7,6 +7,7 @@ import {
   ExpandMore as ExpandMoreIcon,
   Star as StarIcon,
 } from "@mui/icons-material";
+import {SyncLoader} from "react-spinners";
 
 import "./App.css";
 
@@ -78,8 +79,8 @@ function App() {
       });
       Promise.all(tempPromises).then((result) => {
         setItems(result);
+        setSubmitted(true);
       });
-      setSubmitted(true);
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -92,11 +93,19 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log({items});
-  // }, [items]);
-
   const RenderContent = () => {
+    if (loading) {
+      return (
+        <div className="h-full flex flex-col justify-center items-center">
+          <SyncLoader
+            color="#2f99df"
+            loading={loading}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      );
+    }
     if (Array.isArray(items) && items?.length) {
       return items.map(
         (
@@ -162,45 +171,47 @@ function App() {
     }
     if (!submitted) return null;
     return (
-      <span className="text-gray-500 font-semibold mt-4">Users not found</span>
+      <div className="h-full flex flex-col justify-center items-center">
+        <span className="text-gray-500 font-semibold mt-4">
+          Users not found
+        </span>
+      </div>
     );
   };
 
   return (
-    <div className="App">
-      <div className="p-4 flex flex-col">
-        <form
-          onSubmit={onSearch}
-          data-testid="formSearch"
-          className="w-100 flex flex-col"
+    <div className="App p-4 flex flex-col h-screen">
+      <form
+        onSubmit={onSearch}
+        data-testid="formSearch"
+        className="w-100 flex flex-col"
+      >
+        <input
+          onChange={(e) => {
+            setQ(e?.target?.value);
+            setSubmitted(false);
+          }}
+          name="username"
+          type="text"
+          placeholder="Enter username"
+          className="mb-4"
+          data-testId="inputUsername"
+        />
+        <button
+          type="submit"
+          data-testId="buttonSearch"
+          disabled={disabled}
+          className={`${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
         >
-          <input
-            onChange={(e) => {
-              setQ(e?.target?.value);
-              setSubmitted(false);
-            }}
-            name="username"
-            type="text"
-            placeholder="Enter username"
-            className="mb-4"
-            data-testId="inputUsername"
-          />
-          <button
-            type="submit"
-            data-testId="buttonSearch"
-            disabled={disabled}
-            className={`${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
-          >
-            {loading ? "Loading..." : "Search"}
-          </button>
-        </form>
-        {submitted && (
-          <span className="text-gray-500 font-semibold text-left my-3">
-            Showing users for “{q}”
-          </span>
-        )}
-        <div className="mt-4 space-y-4">{RenderContent()}</div>
-      </div>
+          {loading ? "Loading..." : "Search"}
+        </button>
+      </form>
+      {submitted && (
+        <span className="text-gray-500 font-semibold text-left my-3">
+          Showing users for “{q}”
+        </span>
+      )}
+      <div className="mt-4 space-y-4">{RenderContent()}</div>
     </div>
   );
 }
