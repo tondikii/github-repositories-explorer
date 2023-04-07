@@ -1,15 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 import api from "./configs/api";
 import Swal from "sweetalert2";
-import {Accordion, AccordionDetails, AccordionSummary} from "@mui/material";
-import {
-  ExpandMore as ExpandMoreIcon,
-  Star as StarIcon,
-} from "@mui/icons-material";
-import {SyncLoader} from "react-spinners";
+import Loading from "./components/Loading";
 
 import "./App.css";
+import UserCard from "./components/UserCard";
+import FormSearch from "./components/FormSearch";
 
 function App() {
   const [q, setQ] = useState("");
@@ -25,6 +22,11 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
 
   const disabled = loading || !q;
+
+  const onChangeForm = (e: React.FormEvent<HTMLInputElement>) => {
+    setQ(e?.currentTarget?.value);
+    setSubmitted(false);
+  };
 
   const onSearch = async (e: React.SyntheticEvent) => {
     try {
@@ -97,19 +99,14 @@ function App() {
     if (loading) {
       return (
         <div className="h-full flex flex-col justify-center items-center">
-          <SyncLoader
-            color="#2f99df"
-            loading={loading}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <Loading loading={loading} />
         </div>
       );
     }
     if (Array.isArray(items) && items?.length) {
       return items.map(
         (
-          e: {
+          user: {
             login: string | null;
             repositories:
               | {
@@ -120,53 +117,7 @@ function App() {
               | null;
           },
           idx: number
-        ) => (
-          <Accordion className="bg-gray-200 shadow-none rounded-none" key={idx}>
-            <AccordionSummary
-              expandIcon={
-                <ExpandMoreIcon className="font-bold w-9 h-9 text-black" />
-              }
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <span className="font-semibold">{e?.login}</span>
-            </AccordionSummary>
-            <AccordionDetails className="bg-white">
-              <div className="flex flex-col space-y-3 mt-1">
-                {e?.repositories?.map(
-                  (
-                    repository: {
-                      name: string;
-                      description: string | null;
-                      stargazers_count: number;
-                    },
-                    idx2: number
-                  ) => (
-                    <div
-                      className="bg-gray-300 px-2 pt-4 pb-12 flex flex-row justify-between w-100"
-                      key={idx2}
-                    >
-                      <div className="flex flex-col items-start">
-                        <strong className="text-lg">
-                          {repository?.name || "-"}
-                        </strong>
-                        <span className="text-sm font-medium text-justify">
-                          {repository?.description || "No description"}
-                        </span>
-                      </div>
-                      <div className="flex flex-row h-fit items-center px-1">
-                        <strong className="text-lg mr-1">
-                          {repository?.stargazers_count}
-                        </strong>
-                        <StarIcon className="font-bold w-6 h-6 text-black" />
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        )
+        ) => <UserCard user={user} key={idx} />
       );
     }
     if (!submitted) return null;
@@ -181,31 +132,12 @@ function App() {
 
   return (
     <div className="App p-4 flex flex-col h-screen">
-      <form
+      <FormSearch
         onSubmit={onSearch}
-        data-testid="formSearch"
-        className="w-100 flex flex-col"
-      >
-        <input
-          onChange={(e) => {
-            setQ(e?.target?.value);
-            setSubmitted(false);
-          }}
-          name="username"
-          type="text"
-          placeholder="Enter username"
-          className="mb-4"
-          data-testId="inputUsername"
-        />
-        <button
-          type="submit"
-          data-testId="buttonSearch"
-          disabled={disabled}
-          className={`${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
-        >
-          {loading ? "Loading..." : "Search"}
-        </button>
-      </form>
+        onChangeForm={onChangeForm}
+        disabled={disabled}
+        loading={loading}
+      />
       {submitted && (
         <span className="text-gray-500 font-semibold text-left my-3">
           Showing users for “{q}”
