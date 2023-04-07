@@ -19,13 +19,19 @@ interface UserCardProps {
 
 const UserCard: FC<UserCardProps> = ({key, user}) => {
   return (
-    <Accordion className="bg-gray-200 shadow-none rounded-none" key={key}>
+    <Accordion
+      className="bg-gray-200 shadow-none rounded-none"
+      key={key}
+      data-testId="userCard"
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon className="font-bold w-9 h-9 text-black" />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <span className="font-semibold">{user?.login}</span>
+        <span className="font-semibold" data-testId="userCardLogin">
+          {user?.login}
+        </span>
       </AccordionSummary>
       <AccordionDetails className="bg-white">
         <div className="flex flex-col space-y-3 mt-1">
