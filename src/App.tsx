@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import api from "./configs/api";
 import Swal from "sweetalert2";
-import Loading from "./components/Loading";
+import Loader from "./components/Loader";
 
 import "./App.css";
 import UserCard from "./components/UserCard";
@@ -99,7 +99,7 @@ function App() {
     if (loading) {
       return (
         <div className="h-full flex flex-col justify-center items-center">
-          <Loading loading={loading} />
+          <Loader loading={loading} />
         </div>
       );
     }

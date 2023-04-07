@@ -5,14 +5,14 @@ interface LoadingProps {
   loading: boolean;
 }
 
-const Loading: FC<LoadingProps> = ({loading = false}) => {
+const Loader: FC<LoadingProps> = ({loading = false}) => {
   return (
     <SyncLoader
       color="#2f99df"
       loading={loading}
       aria-label="Loading Spinner"
-      data-testid="loader"
+      data-testId="loader"
     />
   );
 };
-export default Loading;
+export default Loader;
